@@ -2,8 +2,8 @@ import sys
 
 
 def main():
-    # TODO: Uncomment the code below to pass the first stage
-    print("Hello, World!")
+    sys.stdout.write("$ ")
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":
