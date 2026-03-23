@@ -3,7 +3,7 @@ import sys
 
 def main():
     # TODO: Uncomment the code below to pass the first stage
-    pass
+    print("Hello, World!")
 
 
 if __name__ == "__main__":
