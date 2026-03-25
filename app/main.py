@@ -1,6 +1,22 @@
+import os
 import sys
 
 BUILTINS = {"echo", "exit", "type"}
+
+
+def find_executable_in_path(command_name: str) -> str | None:
+    path_env = os.environ.get("PATH", "")
+
+    for directory in path_env.split(os.pathsep):
+        if not directory:
+            continue
+
+        candidate = os.path.join(directory, command_name)
+
+        if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
+            return candidate
+
+    return None
 
 
 def main():
@@ -27,7 +43,11 @@ def main():
             if target in BUILTINS:
                 print(f"{target} is a shell builtin")
             else:
-                print(f"{target} not found")
+                executable_path = find_executable_in_path(target)
+                if executable_path:
+                    print(f"{target} is {executable_path}")
+                else:
+                    print(f"{target} not found")
         elif parts[0] == "echo":
             print(" ".join(parts[1:]))
         else:
