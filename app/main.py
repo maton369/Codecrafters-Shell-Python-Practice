@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 BUILTINS = {"echo", "exit", "type"}
 
@@ -36,22 +37,34 @@ def main():
 
         if parts[0] == "exit":
             break
+
         elif parts[0] == "type":
             if len(parts) < 2:
                 continue
+
             target = parts[1]
+
             if target in BUILTINS:
                 print(f"{target} is a shell builtin")
+
             else:
                 executable_path = find_executable_in_path(target)
+
                 if executable_path:
                     print(f"{target} is {executable_path}")
+
                 else:
                     print(f"{target} not found")
+
         elif parts[0] == "echo":
             print(" ".join(parts[1:]))
+
         else:
-            print(f"{command}: command not found")
+            executable_path = find_executable_in_path(parts[0])
+            if executable_path is not None:
+                subprocess.run(parts)
+            else:
+                print(f"{parts[0]}: command not found")
 
 
 if __name__ == "__main__":
