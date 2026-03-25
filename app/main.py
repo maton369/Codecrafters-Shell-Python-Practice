@@ -28,6 +28,9 @@ def main():
             else:
                 print(f"{target} not found")
 
+        if parts[0] == "echo":
+            print(" ".join(parts[1:]))
+
         else:
             print(f"{command}: command not found")
 
