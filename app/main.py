@@ -68,6 +68,9 @@ def main():
 
             target_dir = parts[1]
 
+            if target_dir == "~":
+                target_dir = os.environ.get("HOME", "")
+
             try:
                 os.chdir(target_dir)
             except FileNotFoundError:
