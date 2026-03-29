@@ -21,6 +21,18 @@ def find_executable_in_path(command_name: str) -> str | None:
     return None
 
 
+def parse_stdout_redirection(parts):
+    if ">" in parts:
+        idx = parts.index(">")
+        if idx + 1 < len(parts):
+            return parts[:idx], parts[idx + 1]
+    if "1>" in parts:
+        idx = parts.index("1>")
+        if idx + 1 < len(parts):
+            return parts[:idx], parts[idx + 1]
+    return parts, None
+
+
 def main():
     while True:
         sys.stdout.write("$ ")
@@ -32,6 +44,8 @@ def main():
             break
 
         parts = shlex.split(command)
+
+        parts, stdout_file = parse_stdout_redirection(parts)
 
         if len(parts) == 0:
             continue
@@ -58,10 +72,20 @@ def main():
                     print(f"{target}: not found")
 
         elif parts[0] == "echo":
-            print(" ".join(parts[1:]))
+            output = " ".join(parts[1:])
+            if stdout_file:
+                with open(stdout_file, "w") as f:
+                    print(output, file=f)
+            else:
+                print(output)
 
         elif parts[0] == "pwd":
-            print(os.getcwd())
+            output = os.getcwd()
+            if stdout_file:
+                with open(stdout_file, "w") as f:
+                    print(output, file=f)
+            else:
+                print(output)
 
         elif parts[0] == "cd":
             if len(parts) < 2:
@@ -80,7 +104,11 @@ def main():
         else:
             executable_path = find_executable_in_path(parts[0])
             if executable_path is not None:
-                subprocess.run(parts)
+                if stdout_file:
+                    with open(stdout_file, "w") as f:
+                        subprocess.run(parts, stdout=f)
+                else:
+                    subprocess.run(parts)
             else:
                 print(f"{parts[0]}: command not found")
 
