@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 
-BUILTINS = {"echo", "exit", "type", "pwd"}
+BUILTINS = {"echo", "exit", "type", "pwd", "cd"}
 
 
 def find_executable_in_path(command_name: str) -> str | None:
@@ -61,6 +61,17 @@ def main():
 
         elif parts[0] == "pwd":
             print(os.getcwd())
+
+        elif parts[0] == "cd":
+            if len(parts) < 2:
+                continue
+
+            target_dir = parts[1]
+
+            try:
+                os.chdir(target_dir)
+            except FileNotFoundError:
+                print(f"cd: {target_dir}: No such file or directory")
 
         else:
             executable_path = find_executable_in_path(parts[0])
