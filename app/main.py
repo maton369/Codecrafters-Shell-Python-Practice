@@ -1,5 +1,6 @@
 import os
 import sys
+import shlex
 import subprocess
 
 BUILTINS = {"echo", "exit", "type", "pwd", "cd"}
@@ -30,7 +31,7 @@ def main():
         except EOFError:
             break
 
-        parts = command.strip().split()
+        parts = shlex.split(command)
 
         if len(parts) == 0:
             continue
