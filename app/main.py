@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 
-BUILTINS = {"echo", "exit", "type"}
+BUILTINS = {"echo", "exit", "type", "pwd"}
 
 
 def find_executable_in_path(command_name: str) -> str | None:
@@ -54,10 +54,13 @@ def main():
                     print(f"{target} is {executable_path}")
 
                 else:
-                    print(f"{target} not found")
+                    print(f"{target}: not found")
 
         elif parts[0] == "echo":
             print(" ".join(parts[1:]))
+
+        elif parts[0] == "pwd":
+            print(os.getcwd())
 
         else:
             executable_path = find_executable_in_path(parts[0])
